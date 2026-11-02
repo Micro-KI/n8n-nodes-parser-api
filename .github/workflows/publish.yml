@@ -1,0 +1,44 @@
+# Publishes to npm when a version tag such as 1.0.0 is pushed.
+#
+# n8n verification requires a GitHub Actions publish with npm provenance (since 1 May 2026).
+# Authentication uses npm Trusted Publishing (OIDC): on npmjs.com, add a trusted publisher
+# with owner Micro-KI, repository n8n-nodes-parser-api, and workflow publish.yml.
+# NPM_TOKEN is an optional fallback; leave it unset once Trusted Publishing works.
+#
+# Release locally with `npm run release`. It bumps the version, updates the changelog,
+# tags, and pushes. The tag starts this workflow.
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - run: npm ci
+      - run: npm test
+
+      - name: Release
+        run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+          fi
+          npm run release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

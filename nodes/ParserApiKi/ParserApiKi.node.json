@@ -1,0 +1,45 @@
+{
+	"node": "n8n-nodes-parser-api",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Finance & Accounting", "Data & Storage"],
+	"alias": [
+		"Invoice",
+		"Invoice Parser",
+		"E-Invoice",
+		"ZUGFeRD",
+		"Factur-X",
+		"XRechnung",
+		"EDIFACT",
+		"UBL",
+		"Credit Note",
+		"Delivery Note",
+		"Purchase Order",
+		"Bank Statement",
+		"camt",
+		"MT940",
+		"CV",
+		"Resume",
+		"PDF",
+		"OCR",
+		"Document Extraction",
+		"Rechnung",
+		"Kontoauszug",
+		"Lebenslauf"
+	],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/Micro-KI/n8n-nodes-parser-api#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/Micro-KI/n8n-nodes-parser-api#readme"
+			},
+			{
+				"url": "https://parser-api.micro-ki.de/doku"
+			}
+		]
+	}
+}

@@ -1,0 +1,74 @@
+{
+	"name": "n8n-nodes-parser-api",
+	"version": "1.0.0",
+	"description": "n8n community node for Parser API KI+. Reads invoices, credit notes, delivery notes, purchase orders, bank statements, and CVs into fixed JSON.",
+	"license": "MIT",
+	"homepage": "https://parser-api.micro-ki.de",
+	"keywords": [
+		"n8n-community-node-package",
+		"n8n",
+		"n8n-node",
+		"invoice",
+		"invoice-parser",
+		"e-invoice",
+		"zugferd",
+		"factur-x",
+		"xrechnung",
+		"edifact",
+		"ubl",
+		"bank-statement",
+		"camt",
+		"mt940",
+		"cv-parser",
+		"ocr",
+		"pdf",
+		"document-parsing",
+		"data-extraction"
+	],
+	"author": {
+		"name": "Micro KI+",
+		"email": "parser.api@micro-ki.de"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Micro-KI/n8n-nodes-parser-api.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Micro-KI/n8n-nodes-parser-api/issues"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease",
+		"test": "npm run build && node --test test/api.test.mjs",
+		"test:live": "npm run build && node --test test/live.test.mjs"
+	},
+	"files": [
+		"dist",
+		"!dist/**/*.tsbuildinfo"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/ParserApiKiApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/ParserApiKi/ParserApiKi.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "^0.54.6",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"release-it": "^21.1.0",
+		"typescript": "5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
