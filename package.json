@@ -1,5 +1,5 @@
 {
-	"name": "n8n-nodes-parser-api",
+	"name": "n8n-nodes-parser-api-ki",
 	"version": "1.0.0",
 	"description": "n8n community node for Parser API KI+. Reads invoices, credit notes, delivery notes, purchase orders, bank statements, and CVs into fixed JSON.",
 	"license": "MIT",
@@ -31,10 +31,10 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Micro-KI/n8n-nodes-parser-api.git"
+		"url": "git+https://github.com/Micro-KI/n8n-nodes-parser-api-ki.git"
 	},
 	"bugs": {
-		"url": "https://github.com/Micro-KI/n8n-nodes-parser-api/issues"
+		"url": "https://github.com/Micro-KI/n8n-nodes-parser-api-ki/issues"
 	},
 	"scripts": {
 		"build": "n8n-node build",

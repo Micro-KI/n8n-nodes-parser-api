@@ -14,7 +14,7 @@ export class ParserApiKiApi implements ICredentialType {
 
 	displayName = 'Parser API KI+ API';
 
-	documentationUrl = 'https://github.com/Micro-KI/n8n-nodes-parser-api#credentials';
+	documentationUrl = 'https://github.com/Micro-KI/n8n-nodes-parser-api-ki#credentials';
 
 	icon: Icon = {
 		light: 'file:parser-api.svg',

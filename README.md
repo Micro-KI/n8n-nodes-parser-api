@@ -1,4 +1,4 @@
-# n8n-nodes-parser-api
+# n8n-nodes-parser-api-ki
 
 [n8n](https://n8n.io/) community node for [Parser API KI+](https://parser-api.micro-ki.de). It sends a document to `https://parser-api.micro-ki.de` and returns fixed JSON. It can also ask for a quote, the credit balance, or recent usage.
 
@@ -20,7 +20,7 @@ The node is free and MIT-licensed. Parser API KI+ is a paid service: reading a r
 On a self-hosted n8n instance, open **Settings → Community nodes → Install** and enter:
 
 ```text
-n8n-nodes-parser-api
+n8n-nodes-parser-api-ki
 ```
 
 On n8n Cloud, the node appears in the nodes panel once n8n has verified the package. See the [community nodes installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) if the setting is missing.
@@ -55,9 +55,9 @@ Only have a URL? Put an **HTTP Request** node in front: method **GET**, response
 
 ## Documentation
 
-- [Operations, fields, and options](https://github.com/Micro-KI/n8n-nodes-parser-api/blob/main/docs/operations.md)
-- [Errors, retries, and idempotency](https://github.com/Micro-KI/n8n-nodes-parser-api/blob/main/docs/errors-and-retries.md)
-- [Development and releases](https://github.com/Micro-KI/n8n-nodes-parser-api/blob/main/docs/development.md)
+- [Operations, fields, and options](https://github.com/Micro-KI/n8n-nodes-parser-api-ki/blob/main/docs/operations.md)
+- [Errors, retries, and idempotency](https://github.com/Micro-KI/n8n-nodes-parser-api-ki/blob/main/docs/errors-and-retries.md)
+- [Development and releases](https://github.com/Micro-KI/n8n-nodes-parser-api-ki/blob/main/docs/development.md)
 - [Parser API KI+ API reference](https://parser-api.micro-ki.de/doku) (German page; each document type has an English Markdown and PDF download)
 
 ## Compatibility
@@ -66,8 +66,8 @@ Built for n8n 2.x with `n8nNodesApiVersion` 1. Self-hosted instances need commun
 
 ## Support
 
-- Node issues: [GitHub issues](https://github.com/Micro-KI/n8n-nodes-parser-api/issues)
-- Security reports: see [SECURITY.md](https://github.com/Micro-KI/n8n-nodes-parser-api/blob/main/SECURITY.md)
+- Node issues: [GitHub issues](https://github.com/Micro-KI/n8n-nodes-parser-api-ki/issues)
+- Security reports: see [SECURITY.md](https://github.com/Micro-KI/n8n-nodes-parser-api-ki/blob/main/SECURITY.md)
 
 ## License
 

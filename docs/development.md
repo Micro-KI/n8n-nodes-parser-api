@@ -9,8 +9,8 @@
 ## Setup
 
 ```bash
-git clone https://github.com/Micro-KI/n8n-nodes-parser-api.git
-cd n8n-nodes-parser-api
+git clone https://github.com/Micro-KI/n8n-nodes-parser-api-ki.git
+cd n8n-nodes-parser-api-ki
 npm ci
 ```
 
@@ -57,7 +57,7 @@ docs/                                       This documentation
 
 For local testing, remove the line `restrictToSupportedNodes = true as const;` from `credentials/ParserApiKiApi.credentials.ts`, run `npm run build`, and restart n8n. The key still only goes to `https://parser-api.micro-ki.de`, because `authenticate()` rejects every other host.
 
-Put the line back before a release. `npm test` reads the compiled credential and fails while it is missing. A workflow saved without the lock uses the node type `CUSTOM.parserApiKi`. The published package uses `n8n-nodes-parser-api.parserApiKi`, so that saved workflow does not match it.
+Put the line back before a release. `npm test` reads the compiled credential and fails while it is missing. A workflow saved without the lock uses the node type `CUSTOM.parserApiKi`. The published package uses `n8n-nodes-parser-api-ki.parserApiKi`, so that saved workflow does not match it.
 
 ## Manual checks before a release
 
@@ -83,7 +83,7 @@ Releases are published from GitHub Actions with npm provenance, as n8n requires 
 npm offers Trusted Publishing only for a package that already exists. The first version is therefore published once by hand:
 
 1. Build and publish `1.0.0` from a clean checkout with `npm publish --access public` (two-factor authentication required).
-2. On npmjs.com, open the package settings → **Trusted Publisher** → GitHub Actions: owner `Micro-KI`, repository `n8n-nodes-parser-api`, workflow `publish.yml`.
+2. On npmjs.com, open the package settings → **Trusted Publisher** → GitHub Actions: owner `Micro-KI`, repository `n8n-nodes-parser-api-ki`, workflow `publish.yml`.
 3. Publish the next version through the workflow. A trusted publisher that is not used within a few days may expire.
 
 Version numbers `0.1.1` to `0.1.20` were used by an earlier, unpublished package with this name and cannot be published again.
@@ -93,7 +93,7 @@ Version numbers `0.1.1` to `0.1.20` were used by an earlier, unpublished package
 After a version with provenance is on npm, check it with:
 
 ```bash
-npx @n8n/scan-community-package n8n-nodes-parser-api
+npx @n8n/scan-community-package n8n-nodes-parser-api-ki
 ```
 
 Then submit the npm package URL in the [n8n Creator Portal](https://creators.n8n.io/). The portal checks the package and asks for a short video: install the package in n8n, set up the credential with the test key, run an operation, and show the result. Review can take up to four weeks.

@@ -1,5 +1,5 @@
 {
-	"node": "n8n-nodes-parser-api",
+	"node": "n8n-nodes-parser-api-ki",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
 	"categories": ["Finance & Accounting", "Data & Storage"],
@@ -30,12 +30,12 @@
 	"resources": {
 		"credentialDocumentation": [
 			{
-				"url": "https://github.com/Micro-KI/n8n-nodes-parser-api#credentials"
+				"url": "https://github.com/Micro-KI/n8n-nodes-parser-api-ki#credentials"
 			}
 		],
 		"primaryDocumentation": [
 			{
-				"url": "https://github.com/Micro-KI/n8n-nodes-parser-api#readme"
+				"url": "https://github.com/Micro-KI/n8n-nodes-parser-api-ki#readme"
 			},
 			{
 				"url": "https://parser-api.micro-ki.de/doku"
