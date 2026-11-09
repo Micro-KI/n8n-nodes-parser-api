@@ -76,31 +76,40 @@ The default workflow does not need a quote. If credits run out, **Parse Document
 
 ## Get Recent Usage
 
-`GET /api/v1/usage`, optionally filtered by document type with the same words as the API address (`credit-note`, not `credit_note`).
+`GET /api/v1/usage`. To limit the list, add **Document Type** under **Filters**. The values are the same words as the API address (`credit-note`, not `credit_note`). Without that filter, every document type is included.
 
 The response has `request_id` and `entries[]`: the calls of today and yesterday, at most 50, newest first. Each entry has `request_id`, `ts` (ISO time, Europe/Berlin), `type`, `status`, `source`, `cache`, `billed`, `pages`, `error_code`, `fingerprint`, and `lines_ocr`.
 
 ## Node fields
 
-| Field                      | Shown for    | Default | Effect                                                                                                             |
-| -------------------------- | ------------ | ------- | ------------------------------------------------------------------------------------------------------------------ |
-| Document Type              | parse, quote | Invoice | Chooses the API address and the quote `type`                                                                       |
-| Document Type (filter)     | usage        | All     | Filters recent usage                                                                                               |
-| Input Binary Field         | parse, quote | `data`  | Binary field that holds the file. Uploaded with its original file name and extension                               |
-| Remove the File Afterwards | parse, quote | on      | Removes that binary field after a successful call. Other binary fields stay. On failure the file stays on the item |
-| Retry on a Short Outage    | all          | on      | See [Errors, retries, and idempotency](errors-and-retries.md)                                                      |
+| Field              | Shown for    | Default | Effect                                                                               |
+| ------------------ | ------------ | ------- | ------------------------------------------------------------------------------------ |
+| Document Type      | parse, quote | Invoice | Chooses the API address and the quote `type`                                         |
+| Input Binary Field | parse, quote | `data`  | Binary field that holds the file. Uploaded with its original file name and extension |
+
+## Filters
+
+Shown for **Get Recent Usage**. Nothing is filtered until you add an entry.
+
+| Filter        | Default | Effect                                         |
+| ------------- | ------- | ---------------------------------------------- |
+| Document Type | Invoice | Limits the usage list to that document type    |
 
 ## Options
 
-| Option              | Shown for                  | Effect                                                                                                                                                   |
-| ------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Force a Fresh Read  | parse, quote               | Sends `X-Parser-Force: 1`. Skips the stored answer from the last 15 minutes and spends credits again                                                     |
-| Idempotency Key     | parse                      | Replaces the automatic key. See [Errors, retries, and idempotency](errors-and-retries.md#idempotency-key)                                                |
-| Read Lines with OCR | parse, quote; Invoice only | Sends `X-Parser-Lines: ocr`. For ZUGFeRD or Factur-X PDFs whose XML has no line items, the AI reads them from the visible page. Costs the per-page price |
+An option stays at its default until you add it and change it.
+
+| Option                     | Shown for                  | Default | Effect                                                                                                                                                   |
+| -------------------------- | -------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Force a Fresh Read         | parse, quote               | off     | Sends `X-Parser-Force: 1`. Skips the stored answer from the last 15 minutes and spends credits again                                                     |
+| Idempotency Key            | parse                      | empty   | Replaces the automatic key. See [Errors, retries, and idempotency](errors-and-retries.md#idempotency-key)                                                |
+| Read Lines with OCR        | parse, quote; Invoice only | off     | Sends `X-Parser-Lines: ocr`. For ZUGFeRD or Factur-X PDFs whose XML has no line items, the AI reads them from the visible page. Costs the per-page price |
+| Remove the File Afterwards | parse, quote               | on      | Removes that binary field after a successful call. Other binary fields stay. On failure the file stays on the item                                       |
+| Retry on a Short Outage    | all                        | on      | See [Errors, retries, and idempotency](errors-and-retries.md)                                                                                            |
 
 ## Files from a URL
 
-The node does not download links. Put an **HTTP Request** node in front:
+This node does not download a link. Put an **HTTP Request** node in front:
 
 1. Method **GET**
 2. Response format **File**

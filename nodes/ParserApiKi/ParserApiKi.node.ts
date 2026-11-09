@@ -110,13 +110,6 @@ export class ParserApiKi implements INodeType {
 		],
 		properties: [
 			{
-				displayName:
-					'Real files spend credits. The public test key ignores the file and always returns the sample JSON.',
-				name: 'creditNotice',
-				type: 'notice',
-				default: '',
-			},
-			{
 				displayName: 'Operation',
 				name: 'operation',
 				type: 'options',
@@ -125,7 +118,8 @@ export class ParserApiKi implements INodeType {
 					{
 						name: 'Parse Document',
 						value: 'parse',
-						description: 'Read the file and return the fixed JSON',
+						description:
+							'Read the file and return the fixed JSON. Real files spend credits. The public test key ignores the file and always returns the sample JSON.',
 						action: 'Parse document',
 					},
 					{
@@ -164,35 +158,6 @@ export class ParserApiKi implements INodeType {
 					'Where the file is sent. A quote sends the same value as the form field type, for example credit-note.',
 			},
 			{
-				displayName: 'Document Type',
-				name: 'usageDocumentType',
-				type: 'options',
-				default: 'all',
-				displayOptions: {
-					show: {
-						operation: ['usage'],
-					},
-				},
-				options: [
-					{ name: 'All Document Types', value: 'all' },
-					...DOCUMENT_TYPE_OPTIONS.map((option) => ({ name: option.name, value: option.value })),
-				],
-				description:
-					'Optional filter. Uses the same words as the document address, such as credit-note.',
-			},
-			{
-				displayName:
-					'This node does not download a link. If you only have an address, put an HTTP Request node in front: method GET, response format File, output field data. Credentials for that address stay on that node.',
-				name: 'linkNotice',
-				type: 'notice',
-				default: '',
-				displayOptions: {
-					show: {
-						operation: ['parse', 'quote'],
-					},
-				},
-			},
-			{
 				displayName: 'Input Binary Field',
 				name: 'binaryPropertyName',
 				type: 'string',
@@ -204,7 +169,30 @@ export class ParserApiKi implements INodeType {
 					},
 				},
 				description:
-					'Binary field that holds the file. The workflow file and Gmail usually use data. The file is uploaded as form field file, with its original name and extension.',
+					'Binary field that holds the file. The workflow file and Gmail usually use data. The file is uploaded as form field file, with its original name and extension. This node does not download a link. If you only have an address, put an HTTP Request node in front: method GET, response format File, output field data. Credentials for that address stay on that node.',
+			},
+			{
+				displayName: 'Filters',
+				name: 'filters',
+				type: 'collection',
+				placeholder: 'Add filter',
+				default: {},
+				displayOptions: {
+					show: {
+						operation: ['usage'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Document Type',
+						name: 'usageDocumentType',
+						type: 'options',
+						default: 'invoice',
+						options: [...DOCUMENT_TYPE_OPTIONS],
+						description:
+							'Only return calls for this document type. Uses the same words as the document address, such as credit-note.',
+					},
+				],
 			},
 			{
 				displayName: 'Options',
@@ -254,28 +242,28 @@ export class ParserApiKi implements INodeType {
 						description:
 							'Whether to send X-Parser-Lines: ocr on an invoice, so the AI reads line items from the visible page of a ZUGFeRD or Factur-X PDF that has none in its XML. This costs the per-page price. Credit notes have no such switch. Off unless you add this option.',
 					},
-				],
-			},
-			{
-				displayName: 'Remove the File Afterwards',
-				name: 'dropBinary',
-				type: 'boolean',
-				default: true,
-				displayOptions: {
-					show: {
-						operation: ['parse', 'quote'],
+					{
+						displayName: 'Remove the File Afterwards',
+						name: 'dropBinary',
+						type: 'boolean',
+						default: true,
+						displayOptions: {
+							show: {
+								'/operation': ['parse', 'quote'],
+							},
+						},
+						description:
+							'Whether to remove the uploaded file from the item after a successful parse or quote. On unless you add this option and turn it off. This keeps a self-hosted n8n from filling up on many attachments.',
 					},
-				},
-				description:
-					'Whether to remove the uploaded file from the item after a successful parse or quote. This keeps a self-hosted n8n from filling up on many attachments.',
-			},
-			{
-				displayName: 'Retry on a Short Outage',
-				name: 'retryOnBusy',
-				type: 'boolean',
-				default: true,
-				description:
-					'Whether to wait and send the same call again, at most three more times, when the same file is still running, the account is busy, the rate limit answers, or the service returns HTTP 500–599. The pause comes from the Retry-After header. A wrong key, low credits, a rejected file, or an idempotency conflict is not retried.',
+					{
+						displayName: 'Retry on a Short Outage',
+						name: 'retryOnBusy',
+						type: 'boolean',
+						default: true,
+						description:
+							'Whether to wait and send the same call again, at most three more times, when the same file is still running, the account is busy, the rate limit answers, or the service returns HTTP 500–599. The pause comes from the Retry-After header. A wrong key, low credits, a rejected file, or an idempotency conflict is not retried. On unless you add this option and turn it off.',
+					},
+				],
 			},
 		],
 	};
@@ -288,10 +276,7 @@ export class ParserApiKi implements INodeType {
 			try {
 				const operation = this.getNodeParameter('operation', itemIndex) as string;
 				const sendsFile = operation === 'parse' || operation === 'quote';
-				const options = readCallOptions(this.getNodeParameter('options', itemIndex, {}), {
-					retryOnBusy: this.getNodeParameter('retryOnBusy', itemIndex, true),
-					dropBinary: sendsFile ? this.getNodeParameter('dropBinary', itemIndex, true) : false,
-				});
+				const options = readCallOptions(callOptionsFromNode(this, itemIndex, sendsFile));
 				const outcome = await runOperation(this, itemIndex, operation, options);
 				if (outcome.ok) {
 					returnData.push(
@@ -327,6 +312,44 @@ export class ParserApiKi implements INodeType {
 	}
 }
 
+/**
+ * Options added in the panel win. A workflow saved before these switches moved
+ * into Options still has them on the node itself.
+ */
+function callOptionsFromNode(
+	ctx: IExecuteFunctions,
+	itemIndex: number,
+	sendsFile: boolean,
+): IDataObject {
+	const raw = ctx.getNodeParameter('options', itemIndex, {});
+	const options: IDataObject = isJsonObject(raw) ? { ...raw } : {};
+	const saved = ctx.getNode().parameters;
+	if (options.retryOnBusy === undefined && typeof saved.retryOnBusy === 'boolean') {
+		options.retryOnBusy = saved.retryOnBusy;
+	}
+	if (!sendsFile) {
+		options.dropBinary = false;
+	} else if (options.dropBinary === undefined && typeof saved.dropBinary === 'boolean') {
+		options.dropBinary = saved.dropBinary;
+	}
+	return options;
+}
+
+function selectedUsageType(ctx: IExecuteFunctions, itemIndex: number): string {
+	const filters = ctx.getNodeParameter('filters', itemIndex, {});
+	if (isJsonObject(filters) && typeof filters.usageDocumentType === 'string') {
+		const selected = filters.usageDocumentType.trim();
+		if (selected !== '') {
+			return selected;
+		}
+	}
+	const saved = ctx.getNode().parameters.usageDocumentType;
+	if (typeof saved === 'string' && saved.trim() !== '') {
+		return saved.trim();
+	}
+	return 'all';
+}
+
 interface SuccessOutcome {
 	ok: true;
 	body: IDataObject;
@@ -353,7 +376,7 @@ async function runOperation(
 		});
 	}
 	if (operation === 'usage') {
-		const usageType = ctx.getNodeParameter('usageDocumentType', itemIndex, 'all') as string;
+		const usageType = selectedUsageType(ctx, itemIndex);
 		const qs: IDataObject = {};
 		if (usageType !== '' && usageType !== 'all') {
 			qs.type = usageType;

@@ -52,19 +52,16 @@ export function isParserApiRequest(url: string, baseURL?: string): boolean {
 }
 
 /**
- * `options` is the Options collection. The two switches sit on the node itself and
- * stay on unless the user turns them off.
+ * `options` is the Options collection. Removing the file and retrying stay on
+ * unless that option is present and set to false.
  */
-export function readCallOptions(
-	options: unknown,
-	switches: { dropBinary?: unknown; retryOnBusy?: unknown } = {},
-): CallOptions {
+export function readCallOptions(options: unknown): CallOptions {
 	const record = asRecord(options);
 	return {
 		linesOcr: record?.linesOcr === true,
 		force: record?.force === true,
-		dropBinary: switches.dropBinary !== false,
-		retryOnBusy: switches.retryOnBusy !== false,
+		dropBinary: record?.dropBinary !== false,
+		retryOnBusy: record?.retryOnBusy !== false,
 		idempotencyKey: typeof record?.idempotencyKey === 'string' ? record.idempotencyKey.trim() : '',
 	};
 }

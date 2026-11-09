@@ -42,7 +42,7 @@ Saving the credential calls `GET /api/v1/account`, which costs 0 credits. The se
 2. Add **Parser API KI+**, choose **Parse Document** and the document type.
 3. Run the workflow. The output item is the API JSON, for example `invoice.v1`.
 
-Only have a URL? Put an **HTTP Request** node in front: method **GET**, response format **File**, output field **`data`**.
+Only have a URL? This node does not download a link. Put an **HTTP Request** node in front: method **GET**, response format **File**, output field **`data`**. Credentials for that address stay on that node.
 
 ## Operations
 

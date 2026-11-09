@@ -58,7 +58,7 @@ Failures without an API error response use the same fields, usually with `httpSt
 
 ## Retries
 
-With **Retry on a Short Outage** on (default), the node waits and sends the same call again, at most three more times. It uses the same file, headers, and idempotency key.
+**Retry on a Short Outage** is under **Options** and stays on unless you add it and turn it off. The node then waits and sends the same call again, at most three more times. It uses the same file, headers, and idempotency key.
 
 | Response                                              | Retried |
 | ----------------------------------------------------- | ------- |

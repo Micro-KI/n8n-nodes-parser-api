@@ -14,6 +14,7 @@ import {
 	shouldRetry,
 	uploadFileName,
 } from '../dist/nodes/ParserApiKi/api.js';
+import { ParserApiKi } from '../dist/nodes/ParserApiKi/ParserApiKi.node.js';
 
 test('automatic idempotency key pads a short execution id', () => {
 	assert.equal(automaticIdempotencyKey('123456', 0), '123456-0');
@@ -91,13 +92,35 @@ test('options default the file drop and the retry to on', () => {
 		retryOnBusy: true,
 		idempotencyKey: '',
 	});
-	const off = readCallOptions({}, { dropBinary: false, retryOnBusy: false });
+	const off = readCallOptions({ dropBinary: false, retryOnBusy: false });
 	assert.equal(off.dropBinary, false);
 	assert.equal(off.retryOnBusy, false);
 	const picked = readCallOptions({ linesOcr: true, force: true, idempotencyKey: ' run-0001 ' });
 	assert.equal(picked.linesOcr, true);
 	assert.equal(picked.force, true);
 	assert.equal(picked.idempotencyKey, 'run-0001');
+});
+
+test('optional fields live in collections and notices are gone', () => {
+	const { properties } = new ParserApiKi().description;
+	assert.equal(
+		properties.some((prop) => prop.type === 'notice'),
+		false,
+	);
+	assert.deepEqual(
+		properties.map((prop) => prop.name),
+		['operation', 'documentType', 'binaryPropertyName', 'filters', 'options'],
+	);
+	const filters = properties.find((prop) => prop.name === 'filters');
+	assert.deepEqual(
+		filters.options.map((opt) => opt.name),
+		['usageDocumentType'],
+	);
+	const options = properties.find((prop) => prop.name === 'options');
+	assert.deepEqual(
+		options.options.map((opt) => opt.name),
+		['force', 'idempotencyKey', 'linesOcr', 'dropBinary', 'retryOnBusy'],
+	);
 });
 
 test('upload name keeps the original file name', () => {
