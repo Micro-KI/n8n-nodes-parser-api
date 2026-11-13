@@ -129,6 +129,17 @@ test('upload name keeps the original file name', () => {
 	assert.equal(uploadFileName(undefined, undefined), 'document');
 });
 
+test('codex uses the fully-qualified node identifier and valid categories', () => {
+	const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+	const codex = JSON.parse(
+		readFileSync(new URL('../dist/nodes/ParserApiKi/ParserApiKi.node.json', import.meta.url), 'utf8'),
+	);
+	const { name, version } = new ParserApiKi().description;
+	assert.equal(codex.node, `${pkg.name}.${name}`);
+	assert.equal(codex.nodeVersion, `${version}.0`);
+	assert.equal(codex.codexVersion, '1.0');
+});
+
 test('credential stays locked to this node', () => {
 	const source = readFileSync(
 		new URL('../dist/credentials/ParserApiKiApi.credentials.js', import.meta.url),

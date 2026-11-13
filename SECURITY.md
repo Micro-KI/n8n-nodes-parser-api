@@ -17,4 +17,4 @@ Issues in the Parser API KI+ service itself can be reported the same way; we for
 - The key is stored as an n8n password field.
 - The credential only signs requests to `https://parser-api.micro-ki.de` and rejects every other host.
 - Each request is limited to that domain, so a redirect cannot carry the key elsewhere.
-- The credential is not locked to one node name. n8n drops that list when the package is loaded from `~/.n8n/custom`, and the lock then blocks saving the workflow. A request to any other host still throws before the key is attached.
+- The credential sets `restrictToSupportedNodes = true`, so only this node can use it (not the generic HTTP Request node).
