@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-parser-api-ki",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "n8n community node for Parser API KI+. Reads invoices, credit notes, delivery notes, purchase orders, bank statements, and CVs into fixed JSON.",
 	"license": "MIT",
 	"homepage": "https://parser-api.micro-ki.de",
